@@ -41,5 +41,37 @@ public class StartupController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("updateStartUp/{id}")
+    @PreAuthorize("hasAuthority('ROLE_FOUNDER')")
+    public ResponseEntity<StartupResponse> updateStartup(@PathVariable Long id, @RequestBody StartupUpdateRequest request) {
+        StartupResponse response=startupService.updateStartup(id, request);
+        return ResponseEntity.ok(response);
+    }
 
+    @DeleteMapping("/deleteStartup/{id}")
+    @PreAuthorize("hasAuthority('ROLE_FOUNDER')")
+    public ResponseEntity<String> deleteStartup(@PathVariable Long id) {
+        String st=startupService.deleteStartup(id);
+        return ResponseEntity.ok(st);
+    }
+
+    @PutMapping("/admin/approve/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<StartupResponse> approveStartup(@PathVariable Long id) {
+        StartupResponse response=startupService.approveStartup(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/admin/reject/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<StartupResponse> rejectStartup(@PathVariable Long id) {
+        StartupResponse response=startupService.rejectStartup(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/feignInternal/{id}")
+    public ResponseEntity<StartupResponse> getStartupInternal(@PathVariable Long id) {
+        StartupResponse response = startupService.getStartupById(id);
+        return ResponseEntity.ok(response);
+    }
 }
