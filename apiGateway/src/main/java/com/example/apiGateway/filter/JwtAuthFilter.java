@@ -36,7 +36,7 @@ public class JwtAuthFilter implements GlobalFilter {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        if (path.contains("/auth/login") || path.contains("/auth/register")) {
+        if (path.contains("/auth/login")||path.contains("/auth/register")||path.contains("/auth/refresh")||path.contains("/auth/logout")) {
             return chain.filter(exchange);
         }
 
@@ -44,7 +44,7 @@ public class JwtAuthFilter implements GlobalFilter {
 
         String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null|| !authHeader.startsWith("Bearer ")) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }

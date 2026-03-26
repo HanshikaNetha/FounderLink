@@ -71,7 +71,7 @@ public class InvestmentService {
         NotificationEvent notificationEvent=new NotificationEvent();
         notificationEvent.setUserId(investment.getInvestorId());
         notificationEvent.setTitle("investment approved");
-        notificationEvent.setMessage("you investment has been approved for startup id-"+investment.getStartupId() );
+        notificationEvent.setMessage("you investment has been approved for startup id--"+investment.getStartupId() );
         notificationEvent.setType(NotificationType.INVESTMENT_APPROVED);
         notificationProducer.sendNotification(notificationEvent);
 

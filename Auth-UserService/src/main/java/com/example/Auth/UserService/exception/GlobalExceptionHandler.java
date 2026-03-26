@@ -2,6 +2,7 @@ package com.example.Auth.UserService.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -33,11 +34,19 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDenied(Exception ex) {
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body("You are not authorized to perform this action");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to perform this action");
+    }
+
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    public ResponseEntity<String> handleRefreshTokenNotFound(RefreshTokenNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You are not authorized to perform this action");
+    }
+
+    @ExceptionHandler(RefreshTokenExpiredException.class)
+    public ResponseEntity<String> handleRefreshTokenExpired(RefreshTokenExpiredException ex) {
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("You are not authorized to perform this action");
     }
 
 }
