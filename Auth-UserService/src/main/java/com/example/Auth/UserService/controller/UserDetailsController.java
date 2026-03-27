@@ -24,7 +24,8 @@ public class UserDetailsController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or #id == authentication.principal")
     public ResponseEntity<UserResponse> updateUserProfile(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
         UserResponse userResponse=userDetailsService.updateUserProfile(id, request);
-        return ResponseEntity.ok(userResponse);    }
+        return ResponseEntity.ok(userResponse);
+    }
 
     @GetMapping("/getUser/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or #id == authentication.principal")

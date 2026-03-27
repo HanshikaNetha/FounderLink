@@ -48,19 +48,17 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    // Extract username
-    public String extractEmail(String token){
-        return getClaims(token).getSubject();
-    }
-
-    // Validate token
-    public boolean validateToken(String token){
-
-        try{
-            getClaims(token);
-            return true;
-        }catch (JwtException e){
-            return false;
-        }
-    }
+//    public String extractEmail(String token){
+//        return getClaims(token).getSubject();
+//    }
+//
+//    public boolean validateToken(String token){
+//
+//        try{
+//            getClaims(token);
+//            return true;
+//        }catch (JwtException e){
+//            return false;
+//        }
+//    }
 }

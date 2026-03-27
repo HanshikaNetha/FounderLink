@@ -2,14 +2,13 @@ package com.example.Auth.UserService.controller;
 
 import com.example.Auth.UserService.dto.*;
 import com.example.Auth.UserService.service.AuthService;
+import io.micrometer.observation.annotation.Observed;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,8 +24,8 @@ public class AuthController {
 
     @Transactional
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse loginResponse=authService.login(request);
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse=authService.login(loginRequest);
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -40,5 +39,11 @@ public class AuthController {
     public ResponseEntity<String> logout(@RequestBody RefreshTokenRequest request) {
         authService.logout(request);
         return ResponseEntity.ok("Log out successful");
+    }
+
+    @GetMapping("/test")
+    public String test(HttpServletRequest request) {
+        System.out.println("TRACEPARENT HEADER: " + request.getHeader("traceparent"));
+        return "OK";
     }
 }

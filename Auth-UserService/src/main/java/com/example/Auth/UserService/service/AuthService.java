@@ -34,7 +34,7 @@ public class AuthService {
         }
         Role role;
         try {
-            role = Role.valueOf(String.valueOf(request.getRole()));
+            role = request.getRole();
         } catch (IllegalArgumentException e) {
             throw new InvalidRoleException("you are supposed to give correct role");
         }
