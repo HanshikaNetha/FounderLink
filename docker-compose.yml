@@ -1,0 +1,163 @@
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Hani@2004
+    ports:
+      - "3307:3306"
+    networks:
+      - founderlink-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9412:9411"
+    networks:
+      - founderlink-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      - founderlink-network
+
+  config-server:
+    build: ./ConfigServer
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - founderlink-network
+
+  eureka-server:
+    build: ./EurekaServer
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - founderlink-network
+
+  api-gateway:
+    build: ./apiGateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      JWT_SECRET: mysecretkeymysecretkeymysecretkeymysecretkey
+    depends_on:
+      - config-server
+      - eureka-server
+    restart: always
+    networks:
+      - founderlink-network
+
+  auth-user-service:
+    build: ./Auth-UserService
+    container_name: auth-user-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      JWT_SECRET: mysecretkeymysecretkeymysecretkeymysecretkey
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/founderlink_auth
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hani@2004
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
+    restart: always
+    networks:
+      - founderlink-network
+
+  startup-service:
+    build: ./startupService
+    container_name: startup-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/founderlink_startup
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hani@2004
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
+    restart: always
+    networks:
+      - founderlink-network
+
+  investment-service:
+    build: ./investmentService
+    container_name: investment-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/founderlink_investment
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hani@2004
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
+    restart: always
+    networks:
+      - founderlink-network
+
+  collaboration-service:
+    build: ./collaborationService
+    container_name: collaboration-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/founderlink_collaboration
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hani@2004
+    depends_on:
+      - mysql
+      - config-server
+      - eureka-server
+    restart: always
+    networks:
+      - founderlink-network
+
+  notification-service:
+    build: ./notificationService
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/founderlink_notification
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hani@2004
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - mysql
+      - rabbitmq
+      - config-server
+      - eureka-server
+    restart: always
+    networks:
+      - founderlink-network
+
+networks:
+  founderlink-network:

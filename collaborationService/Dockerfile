@@ -1,4 +1,3 @@
-# Java 21 JDK
 FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
